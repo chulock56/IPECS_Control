@@ -1,0 +1,8 @@
+The following libraries are required for the Arduino code to work:
+
+https://github.com/PaulStoffregen/Encoder
+https://github.com/tomstewart89/StateSpaceControl
+https://github.com/AndreaLombardo/L298N
+
+1. Download the files by following each link and using the green "Clone or download" button
+2. Add them to your Arduino IDE by navigating to "Sketch > Include Library > Add .ZIP Library..." then select each downloaded    library
