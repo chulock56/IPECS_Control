@@ -6,3 +6,38 @@ https://github.com/AndreaLombardo/L298N
 
 1. Download the files by following each link and using the green "Clone or download" button
 2. Add them to your Arduino IDE by navigating to "Sketch > Include Library > Add .ZIP Library..." then select each downloaded library
+3. Add the following code to the end of "Model.h", which should be located in "Documents > Arduino > libraries > StateSpaceControl-master":
+
+/* This model describes the IPECS rotary inverted pendulum with states, inputs, and outputs defined as:
+ *
+ * x = [theta, alpha, dtheta, dalpha]
+ * u = [Vm]
+ * y = [theta, alpha]
+ *
+ * Certain elements from the A and B matrices are required, which are defined in the accompanying MATLAB code. The required inputs to the InvPendModel model declaration can be easily copy/pasted from the MATLAB code.
+ */
+struct InvPendModel : public Model<4,1,2>
+{
+    InvPendModel(float A32, float A33, float A34, float A42, float A43, float A44, float B31, float B41)
+    {
+        
+        // Define the system matrix
+        A << 0, 0, 1, 0,
+        0, 0, 0, 1,
+        0, A32, A33, A34,
+        0, A42, A43, A44;
+        
+        // Define the input matrix
+        B << 0,
+        0,
+        B31,
+        B41;
+        
+        // Define the output matrix
+        C << 1, 0, 0, 0,
+        0, 1, 0, 0;
+        
+        // Define the direct transmission matrix
+        D = Zeros<2,1>();
+    }
+};
