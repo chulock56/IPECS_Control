@@ -6,6 +6,9 @@ Drexel MEM Senior Design Team #027:
 
 This code written by: Chulock A., Insalaco, D. on 01/08/2019
 
+! FUNCTION "rscale.m" MUST BE IN THE SAME FOLDER AS THIS CODE FOR THIS CODE
+TO WORK !
+
 This code receives the model parameter values from "InvPend_Params.m",
 creates the linear state space model, and simulates the state feedback
 controller.
@@ -15,11 +18,11 @@ into the Arduino IDE state-feedback control program.
 
 Desired Specs:
 
--Settling time, theta & alpha: < 1.5s
+-Settling time, theta & alpha: < 2s
 -Rise time, theta:             < 0.5s
 -SS Error, theta & alpha:      < 2%
 -Pendulum angle, alpha:        < 0.1745rad (10deg) from vertical, ALWAYS
--Motor Voltage, Vm:            < 9V, ALWAYS
+-Motor Voltage, Vm:            < 10V, ALWAYS
 
 %}
 
@@ -103,14 +106,6 @@ r = 0.35*ones( size(t) ) ; % theta reference input (step)
 
 [ y, t, x ] = lsim( pend_des, r, t ) ; % get step response plot data
 
-% figure(1)
-% [ AX, H1, H2 ] = plotyy( t, y(:,1), t, y(:,2), 'plot' ) ;
-% set( get(AX(1), 'Ylabel'), 'String', 'rotary arm angle (rad)' )
-% set( get(AX(2), 'Ylabel'), 'String', 'pendulum angle (rad)' )
-% xlabel( 'Time (s)' )
-% title( 'Step Response with State-Feedback Control' )
-% grid on
-
 figure(1)
 plot( t, rad2deg(y(:,1)), t, rad2deg(y(:,2)), t, rad2deg(r), '--b' )
 title( 'Step Response with State-Feedback Control (w/ Known Nat. Freq. & Damping' )
@@ -120,7 +115,7 @@ legend('Rotary Arm Angle', 'Pendulum Angle', 'Rotary Arm Setpoint')
 grid on
 
 figure(2)
-plot( t, r-K*x')
+plot( t, r.*Nbar-K*x')
 title( 'Step Response with State-Feedback Control' )
 xlabel( 'Time (s)' )
 ylabel( 'Motor Input Voltage (V)' )
@@ -159,13 +154,6 @@ t = 0:0.01:10 ; % time
 r = 0.35*square(0.1*2*pi*t) ; % square wave (Hz)
 
 [ y, t, x ] = lsim( pend_lqr, r, t ) ; % get step response plot data
-
-% figure(3)
-% [ AX, H1, H2 ] = plotyy( t, y(:,1), t, y(:,2), 'plot' ) ;
-% set( get(AX(1), 'Ylabel'), 'String', 'rotary arm angle (rad)' )
-% set( get(AX(2), 'Ylabel'), 'String', 'pendulum angle (rad)' )
-% title( 'Step Response with LQR Control' )
-% grid on
 
 figure(3)
 plot( t, rad2deg(y(:,1)), t, rad2deg(y(:,2)), t, rad2deg(r), '--b' )
@@ -213,13 +201,6 @@ r = 0.35*square(0.1*2*pi*t) ; % square wave (Hz)
 
 [ y, t, x ] = lsim( pend_est_lqr, r, t ) ; % get step response plot data
 
-% figure(5)
-% [ AX, H1, H2 ] = plotyy( t, y(:,1), t, y(:,2), 'plot' ) ;
-% set( get(AX(1), 'Ylabel'), 'String', 'rotary arm angle (rad)' )
-% set( get(AX(2), 'Ylabel'), 'String', 'pendulum angle (rad)' )
-% title('Step Response with Observer-Based LQR Control')
-% grid on
-
 figure(5)
 plot( t, rad2deg(y(:,1)), t, rad2deg(y(:,2)), t, rad2deg(r), '--b' )
 title( 'Step Response with Observer-Based LQR Control' )
@@ -257,19 +238,6 @@ xlabel('Time, s')
 ylabel('Angle (deg) / Angular Velocity (deg/s)')
 legend('Rotary Arm Ang. Pos.', 'Pendulum Ang. Pos.', 'Rotary Arm Ang. Vel.', 'Pendulum Ang. Vel.')
 grid on
-
-% figure(7)
-% [ AX, H1, H2 ] = plotyy( t, xDeg(:,1:2), t, xDeg(:,3:4), 'plot' );
-% set(AX, {'ycolor'}, {'b';'r'})
-% set(H1(1), 'linestyle', '-', 'color', 'b')
-% set(H1(2), 'linestyle', '--', 'color', 'b')
-% set(H2(1), 'linestyle', '-', 'color', 'r')
-% set(H2(2), 'linestyle', '--', 'color', 'r')
-% set(get(AX(1), 'Ylabel'), 'String', 'Angular Position (deg)', 'color', 'b')
-% set(get(AX(2), 'Ylabel'), 'String', 'Angular Velocity (deg/s)', 'color', 'r')
-% title('Step Response with Observer-Based LQR Control')
-% legend('Rotary Arm Ang. Pos.', 'Pendulum Ang. Pos.', 'Rotary Arm Ang. Vel.', 'Pendulum Ang. Vel.')
-% grid on
 
 %% C-Code Generation
 
